@@ -63,44 +63,6 @@ func processLine(line string, tolerance int) bool {
 	}
 
 	return false
-
-	prevDiff := 0
-	i := 0
-	j := 1
-	bad := 0
-	for j < len(values) {
-		if bad > tolerance {
-			return false
-		}
-
-		diff := values[i] - values[j]
-		if !checkDiff(values[i], values[j], prevDiff) {
-			bad++
-			if j+1 < len(values) && checkDiff(values[i], values[j+1], prevDiff) {
-				j++
-			} else if i == 0 {
-				i = 1
-				j = 2
-				continue
-			} else if j == len(values)-1 {
-			} else {
-				fmt.Printf("%#v, (%d, %d)\n", values, i, j)
-				return false
-			}
-
-			diff = values[i] - values[j]
-
-			i = j
-			j++
-			continue
-		}
-
-		i = j
-		j++
-		prevDiff = diff
-	}
-
-	return bad <= tolerance
 }
 
 func solvePuzzle01() {
