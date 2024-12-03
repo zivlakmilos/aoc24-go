@@ -1016,5 +1016,5 @@ func getTestInput() string {
 }
 
 func getInput() string {
-	return getTestInput()
+	return getInput01()
 }
