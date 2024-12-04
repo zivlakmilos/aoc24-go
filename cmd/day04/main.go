@@ -90,6 +90,36 @@ func check(data [][]byte, ch byte, x, y, dirX, dirY int) bool {
 	return false
 }
 
+func getCh(data [][]byte, x, y int) byte {
+	if y < 0 || y >= len(data) {
+		return 0
+	}
+	if x < 0 || x >= len(data[y]) {
+		return 0
+	}
+
+	return data[y][x]
+}
+
+func checkX(data [][]byte, x, y int) bool {
+	ch := getCh(data, x, y)
+
+	if ch != 'A' {
+		return false
+	}
+
+	ch1 := getCh(data, x-1, y-1)
+	ch2 := getCh(data, x+1, y-1)
+	ch3 := getCh(data, x-1, y+1)
+	ch4 := getCh(data, x+1, y+1)
+	if ((ch1 == 'M' && ch4 == 'S') || (ch1 == 'S' && ch4 == 'M')) &&
+		((ch2 == 'M' && ch3 == 'S') || (ch2 == 'S' && ch3 == 'M')) {
+		return true
+	}
+
+	return false
+}
+
 func solvePuzzle01() {
 	input := getInput()
 
@@ -111,6 +141,24 @@ func solvePuzzle01() {
 	fmt.Printf("Number of XMAS: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+
+	res := 0
+
+	data := parseInput(input)
+	for i := 0; i < len(data); i++ {
+		for j := 0; j < len(data[i]); j++ {
+			if checkX(data, j, i) {
+				res++
+			}
+		}
+	}
+
+	fmt.Printf("Number of X-MAS: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
