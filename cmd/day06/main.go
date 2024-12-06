@@ -117,6 +117,49 @@ func solvePuzzle01() {
 	fmt.Printf("Result: %d\n", res)
 }
 
+func solvePuzzle02() {
+	res := 0
+
+	input := getInput()
+	matrix, sx, sy := parseInput(input)
+	sdir := byte('^')
+
+	for i := range matrix {
+		for j := range matrix[i] {
+			if matrix[i][j].value != '.' {
+				continue
+			}
+
+			matrix[i][j].value = '#'
+
+			x := sx
+			y := sy
+			dir := sdir
+			visited := map[string]struct{}{}
+			for isValidPos(matrix, x, y) {
+				key := fmt.Sprintf("%d-%d-%c", x, y, dir)
+				if _, ok := visited[key]; ok {
+					res++
+					break
+				}
+
+				visited[key] = struct{}{}
+
+				var ok bool
+				x, y, ok = makeMove(matrix, x, y, dir)
+				if !ok {
+					dir = rotate(dir)
+				}
+			}
+
+			matrix[i][j].value = '.'
+		}
+	}
+
+	fmt.Printf("Result: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
