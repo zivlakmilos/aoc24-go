@@ -76,6 +76,41 @@ func calcAntinodes(a, b Coord, w, h int) []Coord {
 	return res
 }
 
+func calcAntinodesAll(a, b Coord, w, h int) []Coord {
+	var res []Coord
+
+	res = append(res, a)
+	res = append(res, b)
+
+	diffX := a.x - b.x
+	diffY := a.y - b.y
+
+	x1 := a.x + diffX
+	y1 := a.y + diffY
+	x2 := b.x - diffX
+	y2 := b.y - diffY
+
+	for isValidCoord(x1, y1, w, h) {
+		res = append(res, Coord{
+			x: x1,
+			y: y1,
+		})
+		x1 += diffX
+		y1 += diffY
+	}
+
+	for isValidCoord(x2, y2, w, h) {
+		res = append(res, Coord{
+			x: x2,
+			y: y2,
+		})
+		x2 -= diffX
+		y2 -= diffY
+	}
+
+	return res
+}
+
 func solvePuzzle01() {
 	input := getInput()
 	data, w, h := parseInput(input)
@@ -97,6 +132,28 @@ func solvePuzzle01() {
 	fmt.Printf("Number of antinodes: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+	data, w, h := parseInput(input)
+
+	set := map[string]struct{}{}
+	for _, val := range data {
+		for i := 0; i < len(val); i++ {
+			for j := i + 1; j < len(val); j++ {
+				antinodes := calcAntinodesAll(val[i], val[j], w, h)
+				for _, antinode := range antinodes {
+					key := fmt.Sprintf("%d-%d", antinode.x, antinode.y)
+					set[key] = struct{}{}
+				}
+			}
+		}
+	}
+
+	res := len(set)
+	fmt.Printf("Number of antinodes: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
