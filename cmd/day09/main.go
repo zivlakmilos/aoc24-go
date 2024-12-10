@@ -1,6 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
+
+type Block struct {
+	pos int
+	len int
+	id  int
+}
 
 func parseInput(input string) []int {
 	var res []int
@@ -49,13 +58,78 @@ func checksum(data []int) int {
 
 	for i := range data {
 		if data[i] < 0 {
-			break
+			continue
 		}
 
 		res += data[i] * i
 	}
 
 	return res
+}
+
+func extractBlocks(data []int) ([]Block, []Block) {
+	var memBlocks []Block
+	var freeBlocks []Block
+	pos := 0
+
+	for pos < len(data) {
+		size := 0
+		for r := pos; r < len(data) && data[pos] == data[r]; r++ {
+			size++
+		}
+
+		if data[pos] < 0 {
+			freeBlocks = append(freeBlocks, Block{
+				pos: pos,
+				len: size,
+				id:  data[pos],
+			})
+		} else {
+			memBlocks = append(memBlocks, Block{
+				pos: pos,
+				len: size,
+				id:  data[pos],
+			})
+		}
+
+		pos += size
+	}
+
+	return memBlocks, freeBlocks
+}
+
+func moveBlock(data []int, t, f, l int) {
+	for i := 0; i < l; i++ {
+		data[t+i] = data[f+i]
+		data[f+i] = -1
+	}
+}
+
+func defragment(data []int) {
+	memBlocks, freeBlocks := extractBlocks(data)
+
+	l := 0
+	for l < len(freeBlocks) && len(memBlocks) > 0 {
+		r := len(memBlocks) - 1
+		for r >= 0 && (memBlocks[r].len > freeBlocks[l].len) {
+			r--
+		}
+		if r < 0 || memBlocks[r].pos < freeBlocks[l].pos {
+			l++
+			continue
+		}
+
+		moveBlock(data, freeBlocks[l].pos, memBlocks[r].pos, memBlocks[r].len)
+
+		diff := freeBlocks[l].len - memBlocks[r].len
+		freeBlocks[l].pos += freeBlocks[l].len - diff
+		freeBlocks[l].len = diff
+		if freeBlocks[l].len <= 0 {
+			l++
+		}
+
+		memBlocks = slices.Delete(memBlocks, r, r+1)
+	}
 }
 
 func solvePuzzle01() {
@@ -68,6 +142,17 @@ func solvePuzzle01() {
 	fmt.Printf("Checksum: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+	data := parseInput(input)
+
+	defragment(data)
+	res := checksum(data)
+
+	fmt.Printf("Checksum: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
