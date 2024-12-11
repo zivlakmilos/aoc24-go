@@ -62,10 +62,12 @@ func countTrails(data [][]byte, i, j int, curr byte, set map[string]struct{}) in
 	}
 
 	key := fmt.Sprintf("%d-%d", i, j)
-	if _, ok := set[key]; ok {
-		return 0
+	if set != nil {
+		if _, ok := set[key]; ok {
+			return 0
+		}
+		set[key] = struct{}{}
 	}
-	set[key] = struct{}{}
 
 	if data[i][j] == 9 {
 		return 1
@@ -96,6 +98,22 @@ func solvePuzzle01() {
 	fmt.Printf("Result: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+	data := parseInput(input)
+
+	res := 0
+
+	for i := range data {
+		for j := range data[i] {
+			res += countTrails(data, i, j, 0, nil)
+		}
+	}
+
+	fmt.Printf("Result: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
