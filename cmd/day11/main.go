@@ -95,6 +95,21 @@ func solvePuzzle01() {
 	fmt.Printf("Number of stones: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+	stones := parseInput(input)
+
+	res := 0
+
+	mem := map[string]int{}
+	for _, stone := range stones {
+		res += numOfStones(stone, 75, mem)
+	}
+
+	fmt.Printf("Number of stones: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
