@@ -97,6 +97,42 @@ func calculateAreas(data [][]Cell, count int) []Area {
 	return res
 }
 
+func calculateAreasWithDiscount(data [][]Cell, count int) []Area {
+	res := make([]Area, count)
+
+	for i := 0; i < len(data); i++ {
+		for j := 0; j < len(data[i]); j++ {
+			res[data[i][j].id].area++
+
+			p1 := checkNeighbour(i+1, j, data, data[i][j].id)
+			p2 := checkNeighbour(i+1, j-1, data, data[i][j].id)
+			if p1 > 0 && (p1 != p2 || j == 0 || data[i][j-1].id != data[i][j].id) {
+				res[data[i][j].id].perimeter++
+			}
+
+			p1 = checkNeighbour(i-1, j, data, data[i][j].id)
+			p2 = checkNeighbour(i-1, j-1, data, data[i][j].id)
+			if p1 > 0 && (p1 != p2 || j == 0 || data[i][j-1].id != data[i][j].id) {
+				res[data[i][j].id].perimeter++
+			}
+
+			p1 = checkNeighbour(i, j+1, data, data[i][j].id)
+			p2 = checkNeighbour(i-1, j+1, data, data[i][j].id)
+			if p1 > 0 && (p1 != p2 || i == 0 || data[i-1][j].id != data[i][j].id) {
+				res[data[i][j].id].perimeter++
+			}
+
+			p1 = checkNeighbour(i, j-1, data, data[i][j].id)
+			p2 = checkNeighbour(i-1, j-1, data, data[i][j].id)
+			if p1 > 0 && (p1 != p2 || i == 0 || data[i-1][j].id != data[i][j].id) {
+				res[data[i][j].id].perimeter++
+			}
+		}
+	}
+
+	return res
+}
+
 func solvePuzzle01() {
 	input := getInput()
 	data := parseInput(input)
@@ -114,6 +150,24 @@ func solvePuzzle01() {
 	fmt.Printf("Total price of fencing: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+	data := parseInput(input)
+
+	count := foundRegions(data)
+
+	areas := calculateAreasWithDiscount(data, count)
+
+	res := 0
+
+	for _, area := range areas {
+		res += area.area * area.perimeter
+	}
+
+	fmt.Printf("Total price of fencing: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
