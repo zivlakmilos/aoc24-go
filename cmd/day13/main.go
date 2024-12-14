@@ -65,6 +65,22 @@ func solveOne01(input string) uint {
 	return res
 }
 
+func solveOne02(input string) uint {
+	a, b, prize := parseInput(input)
+
+	prize.x += 10000000000000
+	prize.y += 10000000000000
+
+	ac := (prize.x*b.y - prize.y*b.x) / (a.x*b.y - a.y*b.x)
+	bc := (a.x*prize.y - a.y*prize.x) / (a.x*b.y - a.y*b.x)
+
+	if ac*a.x+bc*b.x == prize.x && ac*a.y+bc*b.y == prize.y {
+		return uint(3*ac + bc)
+	}
+
+	return 0
+}
+
 func solvePuzzle01() {
 	input := getInput()
 
@@ -78,6 +94,20 @@ func solvePuzzle01() {
 	fmt.Printf("Result: %d\n", res)
 }
 
+func solvePuzzle02() {
+	input := getInput()
+
+	res := uint(0)
+
+	data := strings.Split(input, "\n\n")
+	for _, d := range data {
+		res += solveOne02(d)
+	}
+
+	fmt.Printf("Result: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
