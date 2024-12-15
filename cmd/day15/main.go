@@ -214,8 +214,6 @@ func solvePuzzle02() {
 		}
 	}
 
-	printMap(pos)
-
 	res := calcGps(pos)
 	fmt.Printf("Result: %d\n", res)
 }
