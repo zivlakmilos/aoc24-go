@@ -111,6 +111,18 @@ func getTestInput02() string {
 <^^>>>vv<v>>v<<`
 }
 
+func getTestInput03() string {
+	return `#######
+#...#.#
+#.....#
+#..OO@#
+#..O..#
+#.....#
+#######
+
+<vv<<^^<<^^`
+}
+
 func getInput() string {
 	return getInput01()
 }
