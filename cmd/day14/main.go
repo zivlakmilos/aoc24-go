@@ -108,6 +108,36 @@ func solvePuzzle01() {
 	fmt.Printf("Result: %d\n", res)
 }
 
+func solvePuzzle02() {
+	width := 101
+	height := 103
+
+	input := getInput()
+	robots := parseInput(input)
+
+	res := 0
+
+	for {
+		res++
+		for idx := range robots {
+			simulate(&robots[idx], width, height, 1)
+		}
+
+		set := map[[2]int]struct{}{}
+
+		for _, r := range robots {
+			set[[2]int{r.x, r.y}] = struct{}{}
+		}
+
+		if len(set) == len(robots) {
+			break
+		}
+	}
+
+	fmt.Printf("Result: %d\n", res)
+}
+
 func main() {
 	solvePuzzle01()
+	solvePuzzle02()
 }
